@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AC-Solver | Transformer-Guided RL for Andrews-Curtis Trivialization</title>
+  <meta name="description"
+    content="Interactive visualization of the Andrews-Curtis conjecture RL environment, transformer embeddings, and dataset analysis. Research project based on 'What Makes Math Problems Hard for Reinforcement Learning'." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">◆</span>
+        <span class="logo-text">AC-Solver</span>
+      </a>
+      <div class="nav-links">
+        <a href="#transformer" class="nav-link">Transformer</a>
+        <a href="#tsne" class="nav-link">t-SNE</a>
+      </div>
+      <button id="theme-toggle" class="nav-btn theme-toggle-btn" aria-label="Toggle dark mode"
+        title="Toggle light/dark mode">
+        <!-- Sun icon (shown in dark mode) -->
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5" />
+          <line x1="12" y1="1" x2="12" y2="3" />
+          <line x1="12" y1="21" x2="12" y2="23" />
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+          <line x1="1" y1="12" x2="3" y2="12" />
+          <line x1="21" y1="12" x2="23" y2="12" />
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+        </svg>
+      </button>
+      <a href="https://github.com/Hieuuum/AC-Solver-Caltech" class="nav-btn" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path
+            d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z" />
+        </svg>
+        GitHub
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section id="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-particles" id="hero-particles"></div>
+    <div class="hero-content">
+      <div class="hero-badge">Research Project — Caltech 2025</div>
+      <h1 class="hero-title">
+        Transformer-Guided RL for
+        <span class="gradient-text">AC Trivialization</span>
+      </h1>
+      <p class="hero-subtitle">
+        Connecting a PPO agent with a decoder-only Transformer to solve the Andrews-Curtis conjecture —
+        one of the longest-standing open problems in combinatorial group theory.
+      </p>
+      <div class="hero-stats">
+        <div class="stat-card">
+          <span class="stat-value" id="stat-presentations">1,190</span>
+          <span class="stat-label">Miller-Schupp Presentations</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-dataset">1.83M</span>
+          <span class="stat-label">Training Presentations</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-params">25.7M</span>
+          <span class="stat-label">Transformer Parameters</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" id="stat-f1">0.962</span>
+          <span class="stat-label">Oracle F1 Score</span>
+        </div>
+      </div>
+      <div class="hero-actions">
+        <a href="#transformer" class="btn btn-primary">Explore the Project</a>
+        <a href="https://arxiv.org/abs/2408.15332" class="btn btn-outline" target="_blank">Read the Paper ↗</a>
+      </div>
+    </div>
+    <div class="hero-image">
+      <img src="/images/hero.png" alt="AC Graph Visualization" />
+    </div>
+  </section>
+
+  <!-- Transformer Section -->
+  <section id="transformer" class="section">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">05</span>
+        <h2>Decoder-Only Transformer</h2>
+        <p class="section-desc">8-layer autoregressive model with tied embeddings, trained on 1.83M presentations</p>
+      </div>
+
+      <div class="transformer-viz">
+        <div class="transformer-model">
+          <div class="tf-block tf-input">
+            <div class="tf-label">Input Tokens</div>
+            <div class="tf-detail">
+              <span class="token tok-x">x</span>
+              <span class="token tok-x">x</span>
+              <span class="token tok-yinv">y⁻¹</span>
+              <span class="token tok-yinv">y⁻¹</span>
+              <span class="token tok-yinv">y⁻¹</span>
+              <span class="token tok-sep">SEP</span>
+              <span class="token tok-xinv">x⁻¹</span>
+              <span class="token tok-y">y</span>
+              <span class="token tok-eos">EOS</span>
+            </div>
+          </div>
+          <div class="tf-arrow">↓</div>
+          <div class="tf-block tf-embed">
+            <div class="tf-label">Token Embedding + Positional</div>
+            <div class="tf-detail">W_E(token) + P(position) → ℝ⁵¹²</div>
+          </div>
+          <div class="tf-arrow">↓</div>
+          <div class="tf-blocks-container">
+            <div class="tf-block tf-layer" id="tf-layer-animate">
+              <div class="tf-label">8 × Transformer Block</div>
+              <div class="tf-sublayers">
+                <div class="tf-sublayer">
+                  <span class="sublayer-name">LayerNorm</span>
+                  <span class="sublayer-arrow">→</span>
+                  <span class="sublayer-name">Causal Self-Attention</span>
+                  <span class="sublayer-detail">(4 heads, head_dim=128)</span>
+                  <span class="sublayer-arrow">→</span>
+                  <span class="sublayer-name">Residual</span>
+                </div>
+                <div class="tf-sublayer">
+                  <span class="sublayer-name">LayerNorm</span>
+                  <span class="sublayer-arrow">→</span>
+                  <span class="sublayer-name">MLP</span>
+                  <span class="sublayer-detail">(512→2048→512, GELU)</span>
+                  <span class="sublayer-arrow">→</span>
+                  <span class="sublayer-name">Residual</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tf-arrow">↓</div>
+          <div class="tf-block tf-output">
+            <div class="tf-label">Final LayerNorm → Unembedding (tied: W_U = W_E^T)</div>
+            <div class="tf-detail">Hidden state h ∈ ℝ⁵¹² → Logits ∈ ℝ⁶</div>
+          </div>
+          <div class="tf-arrow">↓</div>
+          <div class="tf-outputs">
+            <div class="tf-out-branch">
+              <div class="tf-out-label">Language Model Loss</div>
+              <div class="tf-out-detail">Next-token prediction (cross-entropy)</div>
+            </div>
+            <div class="tf-out-branch highlight">
+              <div class="tf-out-label">EOS Embedding → ℝ⁵¹²</div>
+              <div class="tf-out-detail">Used for t-SNE + Hardness Oracle H(P)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="transformer-info">
+          <div class="info-card">
+            <h4>Training</h4>
+            <ul>
+              <li>AdamW optimizer (β₁=0.9, β₂=0.95)</li>
+              <li>Weight decay: 0.1</li>
+              <li>BF16 mixed precision on CUDA</li>
+              <li>Sequence packing (no padding waste)</li>
+              <li>Linear warmup → cosine decay</li>
+              <li>Validation loss target: ~0.7337</li>
+            </ul>
+          </div>
+          <div class="info-card">
+            <h4>Hardness Oracle H(P)</h4>
+            <ul>
+              <li>Input: 512-dim EOS embedding</li>
+              <li>Architecture: Linear(512→128) → ReLU → Linear(128→1)</li>
+              <li>Output: P(GS-solved)</li>
+              <li>5-fold stratified CV</li>
+              <li>Target F1 ≥ 0.962</li>
+              <li>Paper baseline: XGBoost F1 = 0.962</li>
+            </ul>
+          </div>
+          <div class="info-card full">
+            <h4>Key Insight (Section 6.3)</h4>
+            <blockquote>
+              "There likely exists an invariant at the level of the 'language' of the balanced presentations that
+              distinguishes GS-solved vs GS-unsolved presentations."
+            </blockquote>
+            <p>The trained transformer's EOS embeddings naturally cluster GS-solved vs GS-unsolved in t-SNE space —
+              revealing structure invisible to the raw int8 representation.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- t-SNE Section -->
+  <section id="tsne" class="section section-dark">
+    <div class="section-inner">
+      <div class="section-header">
+        <span class="section-tag">06</span>
+        <h2>t-SNE Embedding Visualization</h2>
+        <p class="section-desc">Real t-SNE plots of 512-dim EOS embeddings from our trained transformer —
+          comparing the paper's Figure 17 against our replication</p>
+      </div>
+
+      <!-- Paper vs Replication comparison -->
+      <div class="tsne-compare-tabs">
+        <div class="tsne-tab-btns">
+          <button class="tsne-tab-btn active" data-tab="paper">Paper (Fig. 17)</button>
+          <button class="tsne-tab-btn" data-tab="replication">Our Replication</button>
+        </div>
+        <div class="tsne-tab-panels">
+          <div class="tsne-tab-panel active" id="tsne-tab-paper">
+            <p class="tsne-caption">
+              <strong>Shehper et al. (2024), Figure 17</strong> — Left: untrained model (random init).
+              Right: trained model. Each row is one value of n (1–7). GS-solved (blue) and GS-unsolved (red)
+              separating clearly in the trained embeddings.
+            </p>
+            <img src="/images/tsne_fig17_paper.png"
+              alt="Paper Figure 17 — t-SNE of untrained vs trained transformer embeddings, per n"
+              class="tsne-real-img" />
+          </div>
+          <div class="tsne-tab-panel" id="tsne-tab-replication">
+            <p class="tsne-caption">
+              <strong>Our replication</strong> — Same setup: cosine similarity, perplexity 30, 170 pts per panel.
+              Left: untrained. Right: trained. The trained model recovers the same GS-solved / GS-unsolved
+              structure seen in the paper.
+            </p>
+            <img src="/images/tsne_fig17_replication.png"
+              alt="Our replication of Figure 17 — t-SNE of untrained vs trained embeddings per n"
+              class="tsne-real-img" />
+          </div>
+        </div>
+      </div>
+
+      <!-- All MS presentations clustering -->
+      <div class="tsne-all-gs">
+        <h3>All 1190 Miller-Schupp Presentations</h3>
+        <p class="tsne-caption">
+          t-SNE of our trained transformer's EOS embeddings across all 1190 presentations (perplexity=30).
+          Blue = GS-solved, red = GS-unsolved. The tight per-n clusters show the transformer has encoded
+          structural information far beyond the raw integer sequence.
+        </p>
+        <img src="/images/tsne_all_gs.png" alt="t-SNE of all 1190 Miller-Schupp presentations, GS-solved vs GS-unsolved"
+          class="tsne-real-img tsne-all-img" />
+      </div>
+    </div>
+  </section>
+
+  <div class="section-inner">
+    <div class="section-header">
+      <span class="section-tag">07</span>
+      <h2>Proposal B: Three Integration Approaches</h2>
+      <p class="section-desc">How we connect the transformer's learned representations to guide the RL agent</p>
+    </div>
+
+    <div class="approaches-grid">
+      <div class="approach-card" id="approach-a">
+        <div class="approach-header">
+          <span class="approach-letter">A</span>
+          <h3>Curriculum Sampler</h3>
+        </div>
+        <div class="approach-body">
+          <p>Use the hardness oracle H(P) to <strong>order presentations by difficulty</strong>. The agent trains on
+            easy presentations first, gradually progressing to harder ones.</p>
+          <div class="approach-diagram">
+            <div class="approach-flow">
+              <div class="flow-item">Presentation P</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-item highlight">H(P) Score</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-item">Ordered Queue</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-item">PPO Training</div>
+            </div>
+          </div>
+          <div class="approach-code">
+            <code>
+<span class="code-comment"># Replace random sampling in training.py:207-221</span>
+<span class="code-keyword">scores</span> = oracle(embeddings[unsolved_list])
+<span class="code-keyword">curr_states[i]</span> = unsolved_list[scores.argsort()[:k]]
+              </code>
+          </div>
+        </div>
+        <div class="approach-inject">
+          <span class="inject-label">Injection Point:</span>
+          <span class="inject-file">training.py:207-221</span>
+        </div>
+      </div>
+
+      <div class="approach-card" id="approach-b">
+        <div class="approach-header">
+          <span class="approach-letter">B</span>
+          <h3>Auxiliary Reward Shaping</h3>
+        </div>
+        <div class="approach-body">
+          <p>Add a <strong>transformer-based bonus reward</strong> that encourages the agent to move toward easier
+            states in embedding space.</p>
+          <div class="approach-diagram">
+            <div class="approach-flow">
+              <div class="flow-item">State s_t</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-item highlight">Δ H(P)</div>
+              <div class="flow-arrow">→</div>
+              <div class="flow-item">r_t + λ·Δ H</div>
+            </div>
+          </div>
+          <div class="approach-code">
+            <code>
+<span class="code-comment"># Modify reward in ac_env.py:102</span>
+<span class="code-keyword">bonus</span> = λ * (H(s_{t+1}) - H(s_t))
+<span class="code-keyword">reward</span> = base_reward + bonus
+              </code>
+          </div>
+        </div>
+        <div class="approach-inject">
+          <span class="inject-label">Injection Point:</span>
+          <span class="inject-file">ac_env.py:102</span>
+        </div>
+      </div>
+
+      <div class="approach-card" id="approach-c">
+        <div class="approach-header">
+          <span class="approach-letter">C</span>
+          <h3>Enriched State Representation</h3>
+        </div>
+        <div class="approach-body">
+          <p><strong>Concatenate the 512-dim transformer embedding</strong> to the raw 72-dim observation, giving the
+            actor/critic access to long-range structural information.</p>
+          <div class="approach-diagram">
+            <div class="approach-flow">
+              <div class="flow-item">Raw obs (72)</div>
+              <div class="flow-arrow">⊕</div>
+              <div class="flow-item highlight">TF emb (512)</div>
+              <div class="flow-arrow">=</div>
+              <div class="flow-item">Input (584)</div>
+            </div>
+          </div>
+          <div class="approach-code">
+            <code>
+<span class="code-comment"># Modify ppo_agent.py:72</span>
+<span class="code-keyword">input_dim</span> = 72 + 512  <span class="code-comment"># = 584</span>
+<span class="code-keyword">obs</span> = torch.cat([raw_obs, tf_emb], dim=-1)
+              </code>
+          </div>
+        </div>
+        <div class="approach-inject">
+          <span class="inject-label">Injection Point:</span>
+          <span class="inject-file">ppo_agent.py:72</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  </section>
+
+  <!-- Footer -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <div class="footer-left">
+        <span class="footer-logo">◆ AC-Solver</span>
+        <p>Transformer-Guided RL for Andrews-Curtis Trivialization</p>
+        <p class="footer-cite">Based on Shehper et al. (2024) — <a href="https://arxiv.org/abs/2408.15332"
+            target="_blank">arXiv:2408.15332</a></p>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/Hieuuum/AC-Solver-Caltech" target="_blank">GitHub ↗</a>
+        <a href="https://huggingface.co/datasets/mhieuuu/ac-solver-dataset" target="_blank">HuggingFace Dataset ↗</a>
+        <a href="https://arxiv.org/abs/2408.15332" target="_blank">Paper ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
