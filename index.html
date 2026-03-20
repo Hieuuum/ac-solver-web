@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AC-Solver Replication</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f9fafb;
+            --text-primary: #111827;
+            --text-secondary: #4b5563;
+            --border-color: #e5e7eb;
+            --accent: #2563eb;
+            --hover-accent: #1d4ed8;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --header-bg: rgba(255, 255, 255, 0.9);
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #111827;
+            --bg-secondary: #1f2937;
+            --text-primary: #f9fafb;
+            --text-secondary: #9ca3af;
+            --border-color: #374151;
+            --accent: #3b82f6;
+            --hover-accent: #60a5fa;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+            --header-bg: rgba(17, 24, 39, 0.9);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Layout */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        /* Header & Navigation */
+        header {
+            position: sticky;
+            top: 0;
+            background-color: var(--header-bg);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            letter-spacing: -0.025em;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Theme Toggle Button */
+        .theme-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            color: var(--text-secondary);
+            border-radius: 0.375rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--bg-secondary);
+            color: var(--accent);
+        }
+
+        .theme-toggle svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        [data-theme="dark"] .sun-icon { display: block; }
+        [data-theme="dark"] .moon-icon { display: none; }
+        [data-theme="light"] .sun-icon { display: none; }
+        [data-theme="light"] .moon-icon { display: block; }
+
+        /* Typography */
+        main {
+            padding: 4rem 0 6rem;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        p {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            color: var(--text-primary);
+        }
+
+        /* Bullet Points */
+        ul {
+            list-style-position: inside;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1.125rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Architecture Stats Card */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .stat-card .label {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-card .value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        /* Figure & Imagery */
+        figure {
+            margin: 2rem 0;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+
+        figure img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        figcaption {
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            background-color: var(--bg-primary);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        @media (min-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .comparison-grid figure {
+            margin: 0;
+        }
+
+        /* Limitations Note */
+        .callout {
+            background-color: rgba(239, 68, 68, 0.05); /* subtle red background */
+            border-left: 4px solid #ef4444; /* red accent line */
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 0.5rem 0.5rem 0;
+        }
+
+        .callout-title {
+            font-weight: 600;
+            color: #b91c1c; /* dark red text for title */
+            margin-bottom: 0.5rem;
+            font-size: 1.125rem;
+        }
+        
+        [data-theme="dark"] .callout-title {
+            color: #fca5a5;
+        }
+
+        .callout p {
+            margin-bottom: 0;
+            font-size: 1rem;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem 0;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+    </style>
+</head>
+<body data-theme="light">
+
+    <header>
+        <div class="container">
+            <nav>
+                <a href="#" class="nav-logo">AC-Solver Replication</a>
+                <div class="nav-links">
+                    <a href="https://github.com/Hieuuum" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+                        <!-- Sun Icon -->
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        </svg>
+                        <!-- Moon Icon -->
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        </svg>
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        
+        <section id="overview">
+            <h1>Replicating Transformer Models for AC Trivialization</h1>
+            <p>
+                A technical replication of the dataset, architecture, and embedding space dynamics presented in 
+                <a href="https://arxiv.org/abs/2408.15332" target="_blank" rel="noopener noreferrer">"What Makes Math Problems Hard for Reinforcement Learning: A Case Study"</a>.
+            </p>
+        </section>
+
+        <section id="architecture">
+            <h2>Architecture Details</h2>
+            <p>
+                The original paper implemented a sequence modeling approach rather than traditional Deep Q-Learning to solve instances 
+                of the Andrews-Curtis problem. My replication utilizes identical parameters to maintain fidelity in the comparative analysis.
+            </p>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="label">Architecture</div>
+                    <div class="value">Decoder-only</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Depth</div>
+                    <div class="value">8 Layers</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Attention</div>
+                    <div class="value">4 Heads</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Dimensions</div>
+                    <div class="value">d=512</div>
+                </div>
+                <div class="stat-card">
+                    <div class="label">Context Window</div>
+                    <div class="value">1024 Tokens</div>
+                </div>
+            </div>
+            <p>
+                By preserving the 8-layer, 512-dimensional continuous representation space, the auto-regressive model was tasked with 
+                predicting future tokens given the mathematical presentations context.
+            </p>
+        </section>
+
+        <section id="visuals">
+            <h2>Visuals & Results</h2>
+            <p>
+                A core finding of the paper was the structure of the learned embedding space. A successful replication should organize
+                the problem instances similarly. By applying t-SNE dimensionality reduction to the final layer embeddings, we can visually compare structural characteristics.
+            </p>
+
+            <figure>
+                <img src="./public/images/tsne_all_clusters.png" alt="t-SNE clustering of all presentations">
+                <figcaption>My t-SNE clustering of all presentations across all $n$.</figcaption>
+            </figure>
+
+            <p>
+                The comparative layout below illustrates the similarities between the paper's original embedding space (left) and this replicated model's clustering performance (right) segmented by problem length parameter $n$.
+            </p>
+
+            <div class="comparison-grid">
+                <figure>
+                    <img src="./public/images/tsne_fig17_paper.png" alt="Original paper's Figure 17 t-SNE">
+                    <figcaption>The original paper's Figure 17</figcaption>
+                </figure>
+                <figure>
+                    <img src="./public/images/tsne_fig17_replication.png" alt="Replication of Figure 17 clustering">
+                    <figcaption>My replication of Figure 17, clustering presentations based on $n$</figcaption>
+                </figure>
+            </div>
+        </section>
+
+        <section id="limitations">
+            <h2>Known Limitations</h2>
+            <div class="callout">
+                <div class="callout-title">
+                    Dataset Replication Deviation
+                </div>
+                <p>
+                    During the reconstruction of the training dataset, I omitted the cyclic substitution step. This deviation resulted in 
+                    duplicate equivalent presentations remaining present in the training data, which inherently may have impacted density, 
+                    generalization, and overall organization within the model's embedding space clustering.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 Replication Portfolio.</p>
+        </div>
+    </footer>
+
+    <script>
+        // DOM Elements
+        const themeToggleBtn = document.getElementById('theme-toggle');
+        const bodyTag = document.body;
+
+        // Determine Initial Theme
+        const storedTheme = localStorage.getItem('theme');
+
+        // Check if dark mode is explicitly stored, else default to light
+        if (storedTheme === 'dark') {
+            bodyTag.setAttribute('data-theme', 'dark');
+        } else {
+            bodyTag.setAttribute('data-theme', 'light');
+        }
+
+        // Toggle Theme
+        themeToggleBtn.addEventListener('click', () => {
+            const currentTheme = bodyTag.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            bodyTag.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    </script>
+</body>
+</html>
