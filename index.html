@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -121,10 +122,21 @@
             height: 1.25rem;
         }
 
-        [data-theme="dark"] .sun-icon { display: block; }
-        [data-theme="dark"] .moon-icon { display: none; }
-        [data-theme="light"] .sun-icon { display: none; }
-        [data-theme="light"] .moon-icon { display: block; }
+        [data-theme="dark"] .sun-icon {
+            display: block;
+        }
+
+        [data-theme="dark"] .moon-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .sun-icon {
+            display: none;
+        }
+
+        [data-theme="light"] .moon-icon {
+            display: block;
+        }
 
         /* Typography */
         main {
@@ -255,8 +267,10 @@
 
         /* Limitations Note */
         .callout {
-            background-color: rgba(239, 68, 68, 0.05); /* subtle red background */
-            border-left: 4px solid #ef4444; /* red accent line */
+            background-color: rgba(239, 68, 68, 0.05);
+            /* subtle red background */
+            border-left: 4px solid #ef4444;
+            /* red accent line */
             padding: 1.5rem;
             margin: 2rem 0;
             border-radius: 0 0.5rem 0.5rem 0;
@@ -264,11 +278,12 @@
 
         .callout-title {
             font-weight: 600;
-            color: #b91c1c; /* dark red text for title */
+            color: #b91c1c;
+            /* dark red text for title */
             margin-bottom: 0.5rem;
             font-size: 1.125rem;
         }
-        
+
         [data-theme="dark"] .callout-title {
             color: #fca5a5;
         }
@@ -287,9 +302,9 @@
             color: var(--text-secondary);
             font-size: 0.875rem;
         }
-
     </style>
 </head>
+
 <body data-theme="light">
 
     <header>
@@ -300,12 +315,16 @@
                     <a href="https://github.com/Hieuuum" target="_blank" rel="noopener noreferrer">GitHub</a>
                     <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
                         <!-- Sun Icon -->
-                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                        <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
                         </svg>
                         <!-- Moon Icon -->
-                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                        <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                         </svg>
                     </button>
                 </div>
@@ -314,20 +333,23 @@
     </header>
 
     <main class="container">
-        
+
         <section id="overview">
             <h1>Replicating Transformer Models for AC Trivialization</h1>
             <p>
-                A technical replication of the dataset, architecture, and embedding space dynamics presented in 
-                <a href="https://arxiv.org/abs/2408.15332" target="_blank" rel="noopener noreferrer">"What Makes Math Problems Hard for Reinforcement Learning: A Case Study"</a>.
+                A technical replication of the dataset, architecture, and embedding space dynamics presented in
+                <a href="https://arxiv.org/abs/2408.15332" target="_blank" rel="noopener noreferrer">"What Makes Math
+                    Problems Hard for Reinforcement Learning: A Case Study"</a>.
             </p>
         </section>
 
         <section id="architecture">
             <h2>Architecture Details</h2>
             <p>
-                The original paper implemented a sequence modeling approach rather than traditional Deep Q-Learning to solve instances 
-                of the Andrews-Curtis problem. My replication utilizes identical parameters to maintain fidelity in the comparative analysis.
+                The original paper implemented a sequence modeling approach rather than traditional Deep Q-Learning to
+                solve instances
+                of the Andrews-Curtis problem. My replication utilizes identical parameters to maintain fidelity in the
+                comparative analysis.
             </p>
             <div class="stats-grid">
                 <div class="stat-card">
@@ -352,7 +374,8 @@
                 </div>
             </div>
             <p>
-                By preserving the 8-layer, 512-dimensional continuous representation space, the auto-regressive model was tasked with 
+                By preserving the 8-layer, 512-dimensional continuous representation space, the auto-regressive model
+                was tasked with
                 predicting future tokens given the mathematical presentations context.
             </p>
         </section>
@@ -360,8 +383,10 @@
         <section id="visuals">
             <h2>Visuals & Results</h2>
             <p>
-                A core finding of the paper was the structure of the learned embedding space. A successful replication should organize
-                the problem instances similarly. By applying t-SNE dimensionality reduction to the final layer embeddings, we can visually compare structural characteristics.
+                A core finding of the paper was the structure of the learned embedding space. A successful replication
+                should organize
+                the problem instances similarly. By applying t-SNE dimensionality reduction to the final layer
+                embeddings, we can visually compare structural characteristics.
             </p>
 
             <figure>
@@ -370,7 +395,9 @@
             </figure>
 
             <p>
-                The comparative layout below illustrates the similarities between the paper's original embedding space (left) and this replicated model's clustering performance (right) segmented by problem length parameter $n$.
+                The comparative layout below illustrates the similarities between the paper's original embedding space
+                (left) and this replicated model's clustering performance (right) segmented by problem length parameter
+                $n$.
             </p>
 
             <div class="comparison-grid">
@@ -392,8 +419,10 @@
                     Dataset Replication Deviation
                 </div>
                 <p>
-                    During the reconstruction of the training dataset, I omitted the cyclic substitution step. This deviation resulted in 
-                    duplicate equivalent presentations remaining present in the training data, which inherently may have impacted density, 
+                    During the reconstruction of the training dataset, I omitted the cyclic substitution step. This
+                    deviation resulted in
+                    duplicate equivalent presentations remaining present in the training data, which inherently may have
+                    impacted density,
                     generalization, and overall organization within the model's embedding space clustering.
                 </p>
             </div>
@@ -426,10 +455,11 @@
         themeToggleBtn.addEventListener('click', () => {
             const currentTheme = bodyTag.getAttribute('data-theme');
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
+
             bodyTag.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
         });
     </script>
 </body>
+
 </html>
